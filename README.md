@@ -10,9 +10,10 @@ This project is designed to dynamically adjust the level of abstraction in a doc
 # Running the Script
 The script accepts three command-line arguments:
 
--i: The URL of the page from which to parse and cluster documents.
--k: The number of documents to retrieve from the query's cluster.
--q: The query string used to find relevant documents within the cluster.
+* -i: The URL of the page from which to parse and cluster documents.
+* -k: The number of documents to retrieve from the query's cluster.
+* -q: The query string used to find relevant documents within the cluster.
+
 To run the script, use the following command format in your terminal:
 
 ```bash
