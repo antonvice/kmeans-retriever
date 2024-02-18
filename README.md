@@ -8,15 +8,11 @@ This project is designed to dynamically adjust the level of abstraction in a doc
   
 # Run
 
-```python
-model = SentenceTransformer('all-MiniLM-L6-v2')
-pages = parse_page(<insert-your-url>)
-query = "what are agents?"
-num_docs = 3  # Number of documents to return from the cluster
-
-selected_docs = cluster_and_retrieve_docs(model, pages, query, num_docs)
-print("Selected documents from the query's cluster:", selected_docs)
-
+```bash
+python -m venv .venv 
+source .venv/bin/activate
+pip install -r requirements.txt
+python kmeans-retriever.py -i <url> -k <num_of_docks> -q <your_query>
 ```
 
 # Future Improvements (🚧 TODOs)

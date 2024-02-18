@@ -1,9 +1,4 @@
-# Implementation without Langchain
-
 #### LOADER
-
-#* This is just a web based loader, 
-#* need to implement other loaders
 
 
 from bs4 import BeautifulSoup
@@ -18,23 +13,6 @@ def parse_page(url:str)-> List[str]:
 
 pages = parse_page('https://lilianweng.github.io/posts/2023-06-23-agent/')
 
-## TEXT SPLITTER
-'''
-
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-
-text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=100,
-    length_function=len,
-)
-
-texts = text_splitter.split_documents(pages)
-
-
-'''
-## HERE I WILL IMPLEMENT CLUSTERING with kmeans
-# add query to docs, embed all, kmeans, retrieve k of elements
 
 from sklearn.cluster import KMeans
 from sentence_transformers import SentenceTransformer
@@ -45,6 +23,14 @@ from sklearn.cluster import KMeans
 from sentence_transformers import SentenceTransformer
 from typing import List, Tuple
 import numpy as np
+import argparse
+
+parser = argparse.ArgumentParser(description='Kmeans-retriever')
+parser.add_argument('-i', help='url')
+parser.add_argument('-k', help='number of docs retrieved', type=int)
+parser.add_argument('-q', help='query', type=str)
+
+args = parser.parse_args()
 
 # Function to encode documents
 def encode_documents(model, documents: List[str]) -> np.array:
@@ -100,9 +86,9 @@ def cluster_and_retrieve_docs(model, documents: List[str], query: str, num_docs:
 
 # Example usage
 model = SentenceTransformer('all-MiniLM-L6-v2')
-pages = pages
-query = "what are agents?"
-num_docs = 3  # Number of documents to return from the cluster
+pages = parse_page(args.i)
+query = args.q
+num_docs = args.k
 
 selected_docs = cluster_and_retrieve_docs(model, pages, query, num_docs)
 print("Selected documents from the query's cluster:", selected_docs)
