@@ -27,7 +27,21 @@ python script_name.py -i "https://lilianweng.github.io/posts/2023-06-23-agent/" 
 ```
 Output
 ```
-Selected documents from the query's cluster: ['The idea of CoH is to present a history of sequentially improved outputs  in context and train the model to take on the trend to produce better outputs. Algorithm Distillation (AD; Laskin et al. 2023) applies the same idea to cross-episode trajectories in reinforcement learning tasks, where an algorithm is encapsulated in a long history-conditioned policy. Considering that an agent interacts with the environment many times and in each episode the agent gets a little better, AD concatenates this learning history and feeds that into the model. Hence we should expect the next predicted action to lead to better performance than previous trials. The goal is to learn the process of RL instead of training a task-specific policy itself.', 'The heuristic function determines when the trajectory is inefficient or contains hallucination and should be stopped. Inefficient planning refers to trajectories that take too long without success. Hallucination is defined as encountering a sequence of consecutive identical actions that lead to the same observation in the environment.']
+Selected documents from the query's cluster: \
+['The idea of CoH is to present a history of sequentially improved \
+outputs  in context and train the model to take on the trend to produce \
+better outputs. Algorithm Distillation (AD; Laskin et al. 2023) applies \
+the same idea to cross-episode trajectories in reinforcement learning \
+tasks, where an algorithm is encapsulated in a long history-conditioned \
+policy. Considering that an agent interacts with the environment many times \
+and in each episode the agent gets a little better, AD concatenates this learning \
+history and feeds that into the model. Hence we should expect the next predicted \
+action to lead to better performance than previous trials. The goal is to learn the \
+process of RL instead of training a task-specific policy itself.', 'The heuristic \
+function determines when the trajectory is inefficient or contains hallucination and \
+should be stopped. Inefficient planning refers to trajectories that take too long \
+without success. Hallucination is defined as encountering a sequence of consecutive \
+identical actions that lead to the same observation in the environment.']
 ```
 # Future Improvements (🚧 TODOs)
 * The idea is there, but the retrieval doesn't pull the relevant info, maybe I can classify the embedding into one of the clusters without embedding the query into the original data
