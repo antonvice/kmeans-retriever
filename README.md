@@ -51,7 +51,9 @@ Output
  al. “Chain of thought prompting elicits reasoning in large language models.” NeurIPS 2022']
 ```
 # Future Improvements (🚧 TODOs)
-* The idea is there, but the retrieval doesn't pull the relevant info, maybe I can classify the embedding into one of the clusters without embedding the query into the original data
+* --The idea is there, but the retrieval doesn't pull the relevant info, maybe I can classify the embedding into one of the clusters without embedding the query into the original data-- --> DONE!
+
+* Polish and make usable
 
 # Contributions
 Contributions are welcome! If you have suggestions for improvements or want to contribute to the project, please feel free to submit a pull request or open an issue.
