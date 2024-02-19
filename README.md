@@ -31,12 +31,7 @@ The script accepts three command-line arguments:
 ### OR 
 
 * -t: opt out for automatic testing with precoded arguments
-To run the script, use the following command format in your terminal:
 
-```bash
-python kmeans_retriever.py -i "URL" -k NUMBER_OF_DOCS -q "QUERY"
-Replace kmeans_retriever.py with the actual name of your Python script file.
-```
 ### Example:
 To fetch documents from "https://lilianweng.github.io/posts/2023-06-23-agent/", cluster them, and retrieve 3 documents similar to the query "what are agents?", you would run:
 
