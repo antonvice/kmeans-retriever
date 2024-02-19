@@ -42,7 +42,13 @@ python kmeans_retriever.py -t
 ```
 Output
 ```
-['Chain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks. The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.', 'Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the problem into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.', '[1] Wei et al. “Chain of thought prompting elicits reasoning in large language models.” NeurIPS 2022']
+['Chain of thought (CoT; Wei et al. 2022) has become a standard prompting technique for enhancing model performance on complex tasks.\
+ The model is instructed to “think step by step” to utilize more test-time computation to decompose hard tasks into smaller and simpler \
+ steps. CoT transforms big tasks into multiple manageable tasks and shed lights into an interpretation of the model’s thinking process.', \
+ 'Tree of Thoughts (Yao et al. 2023) extends CoT by exploring multiple reasoning possibilities at each step. It first decomposes the \
+ problem  into multiple thought steps and generates multiple thoughts per step, creating a tree structure. The search process can be BFS \
+ (breadth-first search) or DFS (depth-first search) with each state evaluated by a classifier (via a prompt) or majority vote.', '[1] Wei et\
+ al. “Chain of thought prompting elicits reasoning in large language models.” NeurIPS 2022']
 ```
 # Future Improvements (🚧 TODOs)
 * The idea is there, but the retrieval doesn't pull the relevant info, maybe I can classify the embedding into one of the clusters without embedding the query into the original data
