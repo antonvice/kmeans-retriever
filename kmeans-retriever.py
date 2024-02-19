@@ -1,94 +1,67 @@
-#### LOADER
-
-
+## Loading + Parsing
 from bs4 import BeautifulSoup
 import requests
 from typing import List
 
-def parse_page(url:str)-> List[str]:
+def fetch_html_content(url: str) -> str:
     response = requests.get(url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    paragraphs = [p.get_text() for p in soup.find_all('p')] 
+    return response.text
+
+def parse_html_to_paragraphs(html_content: str) -> List[str]:
+    soup = BeautifulSoup(html_content, 'html.parser')
+    paragraphs = [p.get_text() for p in soup.find_all('p')]
     return paragraphs
 
-pages = parse_page('https://lilianweng.github.io/posts/2023-06-23-agent/')
-
-
+## encoding + elbow
 from sklearn.cluster import KMeans
 from sentence_transformers import SentenceTransformer
 import numpy as np
-# Load the Sentence Transformer model
 
-from sklearn.cluster import KMeans
-from sentence_transformers import SentenceTransformer
-from typing import List, Tuple
-import numpy as np
-import argparse
+def encode_documents(model, documents: List[str]) -> np.ndarray:
+    return model.encode(documents)
 
-parser = argparse.ArgumentParser(description='Kmeans-retriever')
-parser.add_argument('-i', help='url')
-parser.add_argument('-k', help='number of docs retrieved', type=int)
-parser.add_argument('-q', help='query', type=str)
+def calculate_inertias(embeddings: np.ndarray, k_range: range) -> List[float]:
+    return [KMeans(n_clusters=k, random_state=42).fit(embeddings).inertia_ for k in k_range]
 
-args = parser.parse_args()
-
-# Function to encode documents
-def encode_documents(model, documents: List[str]) -> np.array:
-    embeddings = model.encode(documents)
-    return embeddings
-
-# Function to find the elbow point
 def find_elbow(inertias: List[float]) -> int:
     n_points = len(inertias)
     all_coords = np.vstack((range(n_points), inertias)).T
-    first_point = all_coords[0]
-    last_point = all_coords[-1]
-    line_vec = last_point - first_point
-    line_vec_norm = line_vec / np.sqrt(np.sum(line_vec**2))
-    vec_from_first = all_coords - first_point
-    scalar_product = np.sum(vec_from_first * line_vec_norm, axis=1)
-    vec_from_first_parallel = np.outer(scalar_product, line_vec_norm)
-    vec_to_line = vec_from_first - vec_from_first_parallel
-    dist_to_line = np.sqrt(np.sum(vec_to_line ** 2, axis=1))
-    idx_of_elbow = np.argmax(dist_to_line)
-    return idx_of_elbow
+    line_vec = all_coords[-1] - all_coords[0]
+    line_vec_norm = line_vec / np.linalg.norm(line_vec)
+    vec_from_first = all_coords - all_coords[0]
+    scalar_product = np.dot(vec_from_first, line_vec_norm)
+    vec_to_line = vec_from_first - np.outer(scalar_product, line_vec_norm)
+    dist_to_line = np.linalg.norm(vec_to_line, axis=1)
+    return np.argmax(dist_to_line)
 
-# Function to cluster documents and return documents from the query's cluster
-def cluster_and_retrieve_docs(model, documents: List[str], query: str, num_docs: int) -> List[str]:
+## Clustering + Retrieving
+
+def cluster_and_retrieve_docs(embeddings: np.ndarray, query_index: int, num_docs: int) -> List[int]:
+    elbow_index = find_elbow(calculate_inertias(embeddings, range(1, 10)))
+    kmeans = KMeans(n_clusters=elbow_index, random_state=42).fit(embeddings)
+    query_cluster = kmeans.labels_[query_index]
+    cluster_indices = [i for i, cluster_id in enumerate(kmeans.labels_) if cluster_id == query_cluster and i != query_index]
+    return np.random.choice(cluster_indices, size=min(num_docs, len(cluster_indices)), replace=False) if len(cluster_indices) > num_docs else cluster_indices
+
+
+## Main
+import argparse
+
+def main(url: str, query: str, num_docs: int):
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    html_content = fetch_html_content(url)
+    documents = parse_html_to_paragraphs(html_content)
     all_documents = documents + [query]
     embeddings = encode_documents(model, all_documents)
-    
-    # Perform KMeans clustering
-    inertias = []
-    K = range(1, 10)
-    for k in K:
-        kmeanModel = KMeans(n_clusters=k, random_state=42).fit(embeddings)
-        inertias.append(kmeanModel.inertia_)
-    
-    elbow_index = find_elbow(inertias)
-    kmeans = KMeans(n_clusters=elbow_index, random_state=42)
-    clusters = kmeans.fit_predict(embeddings)
-    
-    # Identify the cluster that contains the query
-    query_cluster = clusters[-1]  # The query is the last document
-    
-    # Filter documents in the same cluster as the query
-    cluster_documents_indices = [i for i, cluster_id in enumerate(clusters) if cluster_id == query_cluster and i != len(clusters) - 1]  # Exclude the query itself
-    
-    # If there are more documents in the cluster than requested, randomly select 'num_docs'
-    if len(cluster_documents_indices) > num_docs:
-        selected_indices = np.random.choice(cluster_documents_indices, size=num_docs, replace=False)
-    else:
-        selected_indices = cluster_documents_indices
-    
-    # Return the selected documents
-    return [documents[i] for i in selected_indices]
+    selected_indices = cluster_and_retrieve_docs(embeddings, len(documents), num_docs)
+    for index in selected_indices:
+        print(documents[index])
 
-# Example usage
-model = SentenceTransformer('all-MiniLM-L6-v2')
-pages = parse_page(args.i)
-query = args.q
-num_docs = args.k
-
-selected_docs = cluster_and_retrieve_docs(model, pages, query, num_docs)
-print("Selected documents from the query's cluster:", selected_docs)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Document Retrieval with KMeans Clustering')
+    parser.add_argument('-i', '--input-url', required=True, help='URL of the document to process')
+    parser.add_argument('-q', '--query', required=True, help='Query to match in the document')
+    parser.add_argument('-k', '--num-docs', type=int, required=True, help='Number of documents to retrieve')
+    args = parser.parse_args()
+    
+    main(args.input_url, args.query, args.num_docs)

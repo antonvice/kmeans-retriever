@@ -1,6 +1,13 @@
 # Document Clustering and Retrieval System Using KMeans
 This project is designed to dynamically adjust the level of abstraction in a document using Language Learning Models (LLMs). By leveraging the power of LLMs, our system allows users to interactively explore documents at various levels of detail, with the additional feature of clustering similar documents together based on their content.
 
+# Field notes:
+## V 0.1 - add query to the documents, calculate elbow curve, build clusters, retrieve k docs from the query cluster.
+First iteration of the semantic clustering turned out ineffective, I believe that there can be two possible explainations
+1. h0 no change, H1 - I am returning unsorted documents, I need to query K cosine similar documents from the cluster of query
+2. H0 no change, H1 - embedding query with the clusters interferes with the latent space.
+
+
 # Features
 * Dynamic Document Clustering: Group similar documents together using KMeans clustering and Sentence Transformers for embeddings.
 * Query-based Document Retrieval: Ability to query a specific topic and retrieve documents related to that query from a cluster.
