@@ -13,6 +13,9 @@ First iteration of the semantic clustering turned out ineffective, moreover, the
 3. H0 no change, H3 - similar documents retrieved from clusters should be the same as if without clusters
 - H3 is confirmed with retrieved documents being Exactly the same
 
+## V 0.9 - Almost ready
+This version includes the three hypotheses implemented together. the final product is a loader-chunker-retriever object function that transposes a url into a retriever that you can pass a query to.
+
 ## Conclusion of tests
 Tests verified that the technique I came up with for clustering the documents based on KMEANS clustering is an efficient text splitting technique for splitting large amounts of texts from a document for future text retrieval for Retrieval Augmented Generation SYstems, I will polish the algorithm and utilize it in my future work
 
