@@ -29,7 +29,7 @@ single_sentences_list = re.split(r'(?<=[.?!])\s+', essay)
 print (f"{len(single_sentences_list)} senteneces were found")
 
 sentences = [{'sentence': x, 'index' : i} for i, x in enumerate(single_sentences_list)]
-sentences[:3]
+print(sentences[:3])
 
 def combine_sentences(sentences, buffer_size=1):
     # Go through each sentence dict
@@ -63,7 +63,7 @@ def combine_sentences(sentences, buffer_size=1):
 
 sentences = combine_sentences(sentences)
 
-sentences[:3]
+print(sentences[:3])
 
 embeddings = model.encode([x['combined_sentence'] for x in sentences])
 for i, sentence in enumerate(sentences):
