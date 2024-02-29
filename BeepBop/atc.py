@@ -1,5 +1,5 @@
 import numpy as np
-import spacy
+import spacy # <- deprecated
 from bs4 import BeautifulSoup
 import requests
 from sentence_transformers import SentenceTransformer

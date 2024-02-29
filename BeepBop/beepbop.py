@@ -185,7 +185,7 @@ if __name__ == "__main__":
 
     query = "What is the most practical use of Zupass so far?"
     asyncio.run(processor.get_response(query))
-
+    k=3
     most_similar_clusters = processor.get_similar_chunks(query)
     print(f"\nSentences from the {k} most similar clusters:")
     for i, cluster in enumerate(most_similar_clusters, start=1):
